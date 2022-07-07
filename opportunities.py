@@ -1,10 +1,19 @@
+import os
+from io import StringIO
+from pathlib import Path
+
 import requests
 from rich.console import Console
 from rich.live import Live
 from rich.progress import Progress, SpinnerColumn, TimeElapsedColumn
 from rich.table import Column, Table
+from rich.terminal_theme import DIMMED_MONOKAI
 
-from config import HAVELOC_API_KEY, JOB_COUNT_LIMIT
+try:
+    from config import HAVELOC_API_KEY, JOB_COUNT_LIMIT
+except:
+    HAVELOC_API_KEY = os.getenv("HAVELOC_API_KEY")
+    JOB_COUNT_LIMIT = 100
 
 console = Console()
 
@@ -67,13 +76,18 @@ def formatSalary(salary):
     return f"{int(salary / 100000)} LPA"
 
 
-with Live(job_table, auto_refresh=False, vertical_overflow="visible") as live_table:
+with Live(
+    job_table, auto_refresh=False, vertical_overflow="visible", console=console
+) as live_table:
     for job in response["_embedded"]["entityModels"]:
 
         # for each job listing, request job details. If apply button is visible, we color it green
         job_response = requests.get(
             f"https://app.haveloc.com/brokerage/jobViews/{job['id']}", headers=headers
         ).json()
+
+        # For testing
+        # job_response = {"displayApplyButton": False}
 
         job_table.add_row(
             job["companyName"],
@@ -88,3 +102,9 @@ with Live(job_table, auto_refresh=False, vertical_overflow="visible") as live_ta
         )
 
         live_table.refresh()
+
+# Export to html
+out_html = Path("public/index.html")
+export_console = Console(record=True, file=StringIO(), width=120)
+export_console.print(job_table)
+export_console.save_html("public/index.html", theme=DIMMED_MONOKAI, clear=False)
