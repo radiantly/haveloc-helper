@@ -88,6 +88,7 @@ def linkJobTitle(job):
             return job["jobTitle"]
 
 
+# TODO: Print all job listings immediately, then update job listing row with more information later
 with Live(
     job_table, auto_refresh=False, vertical_overflow="visible", console=console
 ) as live_table:
@@ -116,4 +117,9 @@ with Live(
 # Export to html
 export_console = Console(record=True, file=StringIO(), width=120)
 export_console.print(job_table)
-export_console.save_html("public/index.html", theme=DIMMED_MONOKAI, clear=False)
+export_console.save_html(
+    "public/index.html",
+    theme=DIMMED_MONOKAI,
+    clear=False,
+    code_format=Path("public/template.html").read_text(encoding="utf-8"),
+)
