@@ -1,8 +1,10 @@
 # haveloc-helper
 
-Because haveloc's interface can improve. A lot.
+Because haveloc's interface can improve. A lot. [Try it online.](https://radiantly.github.io/haveloc-helper/)
 
 ![Demo](.github/demo.gif)
+
+_(Legend: Green - job listings that can be applied to, Red - job listings already applied to or unavailable)_
 
 ## Usage
 
@@ -13,7 +15,7 @@ Because haveloc's interface can improve. A lot.
 3. Navigate to your repository `Settings` > `Secrets (Actions)` > `New repository secret`.
 
    **Name**: `HAVELOC_API_KEY`\
-   **Value**: the token from haveloc
+   **Value**: the API key from haveloc
 
 4. Enable GitHub pages by going to `Settings` > `Pages`.
 
@@ -22,7 +24,7 @@ Because haveloc's interface can improve. A lot.
 
    Click save.
 
-5. Finally, navigate to the `Actions` tab and enable Actions to update the site hourly.
+5. Finally, navigate to the `Actions` tab and click `I understand my workflows, go ahead and enable them` to update the site hourly. Visit `https://USERNAME.github.io/haveloc-helper/` to see the published site!
 
 ### On your computer
 
