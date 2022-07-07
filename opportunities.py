@@ -57,7 +57,7 @@ job_table = Table(
     "Company name",
     "Job title",
     Column("CTC", justify="right"),
-    "Last modified",
+    "Updated",
     "Job Type",
     "Job status",
     header_style="bold magenta",
@@ -76,6 +76,18 @@ def formatSalary(salary):
     return f"{int(salary / 100000)} LPA"
 
 
+def linkJobTitle(job):
+    match job["jobType"]:
+        case "FULL_TIME":
+            return f"[link=https://app.haveloc.com/FresherJobs/jobs/{job['id']}]{job['jobTitle']}[/link]"
+        case "INTERN":
+            return (
+                f"[link=https://app.haveloc.com/Interns/jobs/{job['id']}]{job['jobTitle']}[/link]"
+            )
+        case _:
+            return job["jobTitle"]
+
+
 with Live(
     job_table, auto_refresh=False, vertical_overflow="visible", console=console
 ) as live_table:
@@ -86,14 +98,12 @@ with Live(
             f"https://app.haveloc.com/brokerage/jobViews/{job['id']}", headers=headers
         ).json()
 
-        # For testing
+        # For testing, comment the above line and uncomment the below line
         # job_response = {"displayApplyButton": False}
 
         job_table.add_row(
             job["companyName"],
-            # TODO: Find direct hyperlink to apply to job
-            # f'[link={job["_links"]["self"]["href"]}]{job["jobTitle"]}[/link]',
-            job["jobTitle"],
+            linkJobTitle(job),
             formatSalary(job["maxCtc"]),
             str(job["lastModifiedDate"]),
             job["jobType"],
@@ -104,7 +114,6 @@ with Live(
         live_table.refresh()
 
 # Export to html
-out_html = Path("public/index.html")
 export_console = Console(record=True, file=StringIO(), width=120)
 export_console.print(job_table)
 export_console.save_html("public/index.html", theme=DIMMED_MONOKAI, clear=False)
