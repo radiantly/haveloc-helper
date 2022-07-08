@@ -55,5 +55,19 @@
         />
       </svg>
     </a>
+    <script>
+      // update generated timestamp with human friendly time string
+      // We don't statically generate a time string since it cannot be adjusted to the user's timezone
+      const pre = document.getElementsByTagName("pre")[0];
+      pre.innerHTML = pre.innerHTML.replace(
+        /\d{{10,}}/,
+        (timestamp) =>
+          "Last updated " +
+          new Intl.RelativeTimeFormat().format(
+            (parseInt(timestamp) - Date.now() / 1000) / 60,
+            "minutes"
+          )
+      );
+    </script>
   </body>
 </html>

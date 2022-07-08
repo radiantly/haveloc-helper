@@ -1,4 +1,5 @@
 import os
+import time
 from io import StringIO
 from pathlib import Path
 
@@ -116,6 +117,7 @@ with Live(
 
 # Export to html
 export_console = Console(record=True, file=StringIO(), width=120)
+export_console.print(round(time.time()))
 export_console.print(job_table)
 export_console.save_html(
     "public/index.html",
